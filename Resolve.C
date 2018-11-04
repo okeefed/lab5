@@ -63,6 +63,6 @@ void Resolve::printSymbolsAtEnd()
 bool Resolve::fileExists(std::string filename)
 {
    //add code to determine if a file exists
-   
+  return 0;
 }
 
