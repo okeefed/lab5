@@ -27,13 +27,13 @@ bool FileHandler::objectFileNeeded(std::string filename)
 //returns true if the filename ends with a .a
 bool FileHandler::isArchive(std::string filename)
 {
-    return 0;
+    return(filename.substr(filename.length() - 2) == ".a");
 }
 
 //returns true if the filename ends with a .o
 bool FileHandler::isObjectFile(std::string filename)
 {
-    return 0;
+    return(filename.substr(filename.length() - 2) == ".o");
 }
 
 //handles .o files; uses nm to get the list of symbols
