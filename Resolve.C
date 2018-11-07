@@ -63,6 +63,10 @@ void Resolve::printSymbolsAtEnd()
 bool Resolve::fileExists(std::string filename)
 {
    //add code to determine if a file exists
-  return 0;
+  if (FILE * file = fopen(filename.c_str(), "r")) {
+      fclose(file);
+      return true;
+  }
+  else return false;
 }
 
