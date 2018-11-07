@@ -69,11 +69,15 @@ void FileHandler::handleObjectFile(std::string filename)
 {
     char buffer[80];
     FILE * fp;
+    int temp;
+    char type;
+    char name[15]; 
     std::string command = ("nm " + filename);
     fp = popen(command.c_str(), "r");
     if (fp == NULL) { std::cout << "popen failed\n"; exit(1); }
     while (fgets(buffer, sizeof(buffer), fp)) {
-        
+	    sscanf(buffer, "%d %c %s", &temp, &type, name);
+	    handleObjectSymbol(name, type);	        
     }
     pclose(fp);
 }
