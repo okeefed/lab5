@@ -20,6 +20,9 @@ class SymbolList
       //returns true if the symbol with the name symbolName is in the list
       //and sets (*type) to the type of the symbol
       bool getSymbol(std::string symbolName, char * type);
+
+      //returns true if the symbol with the name symbolName is in the list
+      bool getSymbol(std::string symbolName);
  
       //updates the type of the symbol with name symbolName       
       void updateSymbol(std::string symbolName, char type);
