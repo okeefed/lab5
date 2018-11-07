@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include <string>
 #include "SymbolList.h"
 #include "FileHandler.h"
@@ -40,6 +41,15 @@ bool FileHandler::isObjectFile(std::string filename)
 //calls handleObjectSymbol to handle each symbol
 void FileHandler::handleObjectFile(std::string filename)
 {
+    char buffer[80];
+    FILE * fp;
+    std::string command = ("nm " + filename);
+    fp = popen(command.c_str(), "r");
+    if (fp == NULL) { std::cout << "popen failed\n"; exit(1); }
+    while (fgets(buffer, sizeof(buffer), fp)) {
+
+    }
+    pclose(fp);
 }
 
 //handles .a files; gets the list of .o; determines whether
@@ -47,5 +57,19 @@ void FileHandler::handleObjectFile(std::string filename)
 //if an object file should be added, it calls handleObjectFile to do the work
 void FileHandler::handleArchive(std::string filename)
 {
+   // bool changed;
+    //if (system("mkdir tmp") == -1) {std:: cout << "mkdir tmp failed\n"; exit(1); }
+
+    std::string obj_list;
+    FILE * fp;
+    system("mkdir tmp");
+    std::string copyCommand = "cp " + filename + " tmp.a";
+    system(copyCommand.c_str());
+    system("cd tmp; ar -x tmp.a");
+    fp = popen("ls tmp", "r");
+    std::cout << fp;
+
+    pclose(fp);
+    system("rm -f -r tmp");
 }
 
