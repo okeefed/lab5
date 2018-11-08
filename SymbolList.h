@@ -22,7 +22,11 @@ class SymbolList
       bool getSymbol(std::string symbolName, char * type);
 
       //returns true if the symbol with the name symbolName is in the list
-      bool getSymbol(std::string symbolName);
+      bool findSymbol(std::string symbolName);
+
+      //returns true if there is an exact match, with type and symbolName 
+      //both taken into account.
+      bool findExactMatch(std::string symbolName, char type);
  
       //updates the type of the symbol with name symbolName       
       void updateSymbol(std::string symbolName, char type);

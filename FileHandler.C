@@ -16,7 +16,23 @@ FileHandler::FileHandler(SymbolList * defined, SymbolList * undefined){}
 //type parameter: type of symbol
 void FileHandler::handleObjectSymbol(std::string name, char type)
 {
+    //if the currSymbol is undefined and is not in the defined list and not already in the undefined list
+    if ((type == 'U') && (!(defined->findSymbol(name))) && (!(undefined->findSymbol(name)))) {
+            undefined->insertSymbol(name, type);
+    }
+    //if undefined
+    else {
+        //Symbol is not already in the defined set
+        if (!(defined->findSymbol(name))) {
+            //Symbol is not undefined either
+            if (!(undefined->findSymbol(name))) {
+                
+            }
 
+        }
+        //Symbol is already defined. Error
+        else { (std::cout << "Error: Strong Symbol is multiply defined\n"); }
+    }
 }
 
 //used to check whether an object file in an archive should be added to the
@@ -35,16 +51,16 @@ bool FileHandler::objectFileNeeded(std::string filename)
     if (fp == NULL) { std::cout << "popen failed\n"; exit(1); }
     while (fgets(buffer, sizeof(buffer), fp)) {
         std::stringstream ss(buffer);
-
-        if (buffer[0] != ' ') {
-            return false;
-        }
-        else {
+        
+        //tests whether the symbol is defined on the current line
+        if (buffer[0] == ' ') {
             ss >> symbolValue;
             ss >> type;
             ss >> symbolName;
             
-            return (undefined->SymbolList::getSymbol(symbolName));
+            //this returns true if the symbol is currently in the 
+            //undefined list 
+            return (undefined->SymbolList::findSymbol(symbolName));
         }
     }
     pclose(fp);

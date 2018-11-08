@@ -49,7 +49,30 @@ bool SymbolList::getSymbol(std::string symbolName, char * type) {
 }
 
 //returns true if the symbol with the name symbolName is in the list
-bool SymbolList::getSymbol(std::string symbolName) {
+//and sets (*type) to the type of the symbol
+bool SymbolList::findExactMatch(std::string symbolName, char type) {
+    SymbolList::startIterate();
+    if(first != NULL) {
+        if(first->name == symbolName && first->type == type) {
+            return true;
+        }
+        /*iterates through linked list. 
+         * if it didn't check iterate and did iterate->next, it would
+         * never check the last element. */
+        while(iterate != NULL) {
+            //if it finds a match it sets the pointer value and returns true
+            if(iterate->name == symbolName && iterate->type == type) {
+                return true;
+            }
+            iterate = iterate->next;
+        }
+    }
+    //if no match is found, it falls through and returns false
+    return false;
+}
+
+//returns true if the symbol with the name symbolName is in the list
+bool SymbolList::findSymbol(std::string symbolName) {
     SymbolList::startIterate();
     if(first->name == symbolName) {
         return true;

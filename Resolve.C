@@ -46,13 +46,15 @@ void Resolve::printSymbolsAtEnd()
 {
    //add code to see if main is undefined (it should be in the
    //defined list with type 'T')
+   if (!(defined->SymbolList::findExactMatch("main", 'T'))) { std::cout << "main is not defined."; exit(1); } 
    //
    //add code to iterate through undefined list and print out
    //those symbol names
+   undefined->printSymbols("Undefined");
 
    //error messages should be in form:
    // : undefined reference to <symbol>
-   
+
    //print the contents of the defined list
    defined->printSymbols("Defined");
 }
