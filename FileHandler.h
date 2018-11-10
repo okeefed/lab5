@@ -36,6 +36,19 @@ class FileHandler
       //a .o should be added to the undefined and defined lists (by calling objectFileNeeded)
       //if an object file should be added, it calls handleObjectFile to do the work 
       void handleArchive(std::string filename);
+
+      
+      //small, single-purpose function for handling undefined symbols
+      void handleUndefinedSymbol(std::string name, char type);
+
+      //small, single-purpose function for handling strong, global symbols
+      void handleStrongGlobalSymbol(std::string name, char type);
+
+      //small, single-purpose function for handling weak, global symbols
+      void handleWeakGlobalSymbol(std::string name, char type);
+
+      //small, single-purpose function for handling local symbols
+      void handleLocalSymbol(std::string name, char type);
 };
 
 

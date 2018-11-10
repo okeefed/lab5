@@ -27,13 +27,18 @@ class SymbolList
       //returns true if there is an exact match, with type and symbolName 
       //both taken into account.
       bool findExactMatch(std::string symbolName, char type);
- 
+    
+      //returns the char type of the symbol if a match is found
+      char fetchType(std::string symbolName);
+
       //updates the type of the symbol with name symbolName       
       void updateSymbol(std::string symbolName, char type);
 
       //inserts a symbol with the name symbolName and the type char
       //at the ***end*** of the linked list
       void insertSymbol(std::string symbolName, char type);
+      
+      struct SymbolEntry * createSymbolEntry(std::string name, char type, SymbolEntry * next);
 
       //removes the symbolEntry node with the name symbolName
       void removeSymbol(std::string symbolName);

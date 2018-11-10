@@ -28,7 +28,7 @@ void SymbolList::printSymbols(std::string header)
 //returns true if the symbol with the name symbolName is in the list
 //and sets (*type) to the type of the symbol
 bool SymbolList::getSymbol(std::string symbolName, char * type) {
-    SymbolList::startIterate();
+    startIterate();
     if(first->name == symbolName) {
         *type = first->type;
         return true;
@@ -49,9 +49,8 @@ bool SymbolList::getSymbol(std::string symbolName, char * type) {
 }
 
 //returns true if the symbol with the name symbolName is in the list
-//and sets (*type) to the type of the symbol
 bool SymbolList::findExactMatch(std::string symbolName, char type) {
-    SymbolList::startIterate();
+    startIterate();
     if(first != NULL) {
         if(first->name == symbolName && first->type == type) {
             return true;
@@ -73,22 +72,44 @@ bool SymbolList::findExactMatch(std::string symbolName, char type) {
 
 //returns true if the symbol with the name symbolName is in the list
 bool SymbolList::findSymbol(std::string symbolName) {
+    if (first != NULL) {
+        SymbolList::startIterate();
+        if(first->name == symbolName) {
+            return true;
+        }
+        /*iterates through linked list. 
+         * if it didn't check iterate and did iterate->next, it would
+         * never check the last element. */
+        while(iterate != NULL) {
+            //if it finds a match it sets the pointer value and returns true
+            if(iterate->name == symbolName) {
+                return true;
+            }
+            iterate = iterate->next;
+        }
+    }
+    //if no match is found, or the list is empty, it falls through and returns false
+    return false;
+}
+
+//returns the symbol's type if one with the same name is found
+char SymbolList::fetchType(std::string symbolName) {
     SymbolList::startIterate();
     if(first->name == symbolName) {
-        return true;
+        return first->type;
     }
     /*iterates through linked list. 
      * if it didn't check iterate and did iterate->next, it would
      * never check the last element. */
-    while(iterate != NULL) {
+    while(iterate->next != NULL) {
         //if it finds a match it sets the pointer value and returns true
         if(iterate->name == symbolName) {
-            return true;
+            return iterate->type;
         }
         iterate = iterate->next;
     }
-    //if no match is found, it falls through and returns false
-    return false;
+    //if no match is found, it falls through and returns ' '
+    return ' ';
 }
 
 //updates the type of the symbol with name symbolName
@@ -107,6 +128,18 @@ void SymbolList::updateSymbol(std::string symbolName, char type) {
         iterate = iterate->next;
     }
 }
+
+/*
+ *Doesn't compile right now
+ *
+struct SymbolEntry * SymbolList::createSymbolEntry(std::string name, char type, SymbolEntry * next) {
+    SymbolList::symbolEntry * ptr = (struct symbolEntry *)malloc(sizeof(symbolEntry));
+    ptr->type = type;
+    ptr->name = name;
+    ptr->next = NULL; 
+    return ptr;
+}
+*/
 
 //inserts a symbol with the name symbolName and the type char
 //at the ***end*** of the linked list
@@ -159,6 +192,7 @@ void SymbolList::removeSymbol(std::string symbolName) {
 
 //sets iterate to first
 void SymbolList::startIterate() {
+    std::cout << first->name << first->type << first->next;
     iterate = first;
 }
 

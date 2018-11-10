@@ -5,6 +5,8 @@
 #include "SymbolList.h"
 #include "FileHandler.h"
 
+static int localSymbolCounter = 0;
+
 FileHandler::FileHandler(SymbolList * defined, SymbolList * undefined){}
 
 //name mangles local symbols
@@ -17,22 +19,65 @@ FileHandler::FileHandler(SymbolList * defined, SymbolList * undefined){}
 void FileHandler::handleObjectSymbol(std::string name, char type)
 {
     //if the currSymbol is undefined and is not in the defined list and not already in the undefined list
-    if ((type == 'U') && (!(defined->findSymbol(name))) && (!(undefined->findSymbol(name)))) {
-            undefined->insertSymbol(name, type);
-    }
-    //if undefined
-    else {
-        //Symbol is not already in the defined set
-        if (!(defined->findSymbol(name))) {
-            //Symbol is not undefined either
-            if (!(undefined->findSymbol(name))) {
-                
-            }
+    if ((type == 'U') && (!(defined->findSymbol(name))) && (!(undefined->findSymbol(name)))) handleUndefinedSymbol(name, type);
+    //else if strong, global symbol
+    else if (type == 'T' || type == 'D') handleStrongGlobalSymbol(name, type);
+    //else if it is a weak, global symbol
+    else if (type == 'C') handleWeakGlobalSymbol(name, type);
+    //else if it is a local symbol
+    else if (type == 'b' || type == 'd') handleLocalSymbol(name, type);
+}
 
+//small, single-purpose function for handling undefined symbols
+void FileHandler::handleUndefinedSymbol(std::string name, char type) {
+    undefined->insertSymbol(name, type);
+}
+
+//small, single-purpose function for handling strong, global symbols
+void FileHandler::handleStrongGlobalSymbol(std::string name, char type) {
+    //Symbol is not already in the defined set
+    if (!(defined->findSymbol(name))) {
+        //Symbol is not in the undefined set either.
+        //At this point, you will always neeed to insert into the defined set. go ahead and do that now.
+        //Then check to see if you need to remove it from the undefined list too.
+        defined->insertSymbol(name, type);
+        //if the symboleName was already in the undefined set...
+        if ((undefined->findSymbol(name))) {
+            //you should remove it from there, as it is now defined!
+            undefined->removeSymbol(name);    
         }
-        //Symbol is already defined. Error
-        else { (std::cout << "Error: Strong Symbol is multiply defined\n"); }
     }
+    //Symbol is already in the defined set
+    else { 
+        //if the type of the already defined symbol is C then we're good
+        //just update the symbol's type.
+        if (defined->fetchType(name) == 'C') {
+            defined->updateSymbol(name, type); 
+        }
+        //else it wasn't a C, so it must have been multiply defined. Spit out error
+        //and move on to next one.
+        std::cout << "Error: Strong Symbol is multiply defined\n"; 
+    }
+}
+
+//small, single-purpose function for handling weak, global symbols
+void FileHandler::handleWeakGlobalSymbol(std::string name, char type) {
+    //if it is not already defined, add it to the defined list
+    if (!(defined->findSymbol(name))) defined->insertSymbol(name, type);
+    //if a symbol with this name was previously undefined, remove it from undefined list.
+    if (undefined->findSymbol(name)) undefined->removeSymbol(name);
+}
+
+//small, single-purpose function for handling local symbols
+void FileHandler::handleLocalSymbol(std::string name, char type) {
+    //append .N to name and insert into defined list
+    //where 'N' is a static counter, incremented every use in order to give unique
+    //names to local symbols
+    name.append(".");
+    name.append(std::to_string(localSymbolCounter));
+    //name has been appended, increment counter so next name is unique
+    localSymbolCounter++;
+    defined->insertSymbol(name, type);
 }
 
 //used to check whether an object file in an archive should be added to the
@@ -60,7 +105,7 @@ bool FileHandler::objectFileNeeded(std::string filename)
             
             //this returns true if the symbol is currently in the 
             //undefined list 
-            return (undefined->SymbolList::findSymbol(symbolName));
+            return (undefined->findSymbol(symbolName));
         }
     }
     pclose(fp);
