@@ -4,7 +4,17 @@
 #include <cstdlib>
 #include <list>
 #include <iterator>
+#include <assert.h>
+
+#ifndef SYMBOLLIST_H
 #include "SymbolList.h"
+#endif
+
+#ifndef FILEHANDLER_H
+#include "FileHandler.h"
+#endif
+
+//static int count;
 
 //lots of methods are missing that you need to add 
 //See SymbolList.h for the declarations
@@ -48,6 +58,11 @@ bool SymbolList::getSymbol(std::string symbolName, char * type) {
     return false;
 }
 
+//returns true if the list is empty
+bool SymbolList::isListEmpty() {
+    return(first == NULL);
+}
+
 //returns true if the symbol with the name symbolName is in the list
 bool SymbolList::findExactMatch(std::string symbolName, char type) {
     startIterate();
@@ -72,7 +87,7 @@ bool SymbolList::findExactMatch(std::string symbolName, char type) {
 
 //returns true if the symbol with the name symbolName is in the list
 bool SymbolList::findSymbol(std::string symbolName) {
-    if (first != NULL) {
+      if (first != NULL) {
         SymbolList::startIterate();
         if(first->name == symbolName) {
             return true;
@@ -94,7 +109,7 @@ bool SymbolList::findSymbol(std::string symbolName) {
 
 //returns the symbol's type if one with the same name is found
 char SymbolList::fetchType(std::string symbolName) {
-    SymbolList::startIterate();
+    startIterate();
     if(first->name == symbolName) {
         return first->type;
     }
@@ -144,7 +159,8 @@ struct SymbolEntry * SymbolList::createSymbolEntry(std::string name, char type, 
 //inserts a symbol with the name symbolName and the type char
 //at the ***end*** of the linked list
 void SymbolList::insertSymbol(std::string symbolName, char type) {
-    symbolEntry * ptr = (struct symbolEntry *)malloc(sizeof(symbolEntry));
+    //symbolEntry * ptr = (struct symbolEntry *)malloc(sizeof(symbolEntry));
+    symbolEntry * ptr = new symbolEntry();
     ptr->type = type;
     ptr->name = symbolName;
     ptr->next = NULL; 
@@ -153,7 +169,7 @@ void SymbolList::insertSymbol(std::string symbolName, char type) {
         first = ptr;
         return;
     }        
-    SymbolList::startIterate();
+    startIterate();
     //find the end of the list
     while (iterate->next != NULL) {
         iterate = iterate->next;
@@ -161,12 +177,13 @@ void SymbolList::insertSymbol(std::string symbolName, char type) {
     //initialize the new Symbol
     //setup a pointer
     iterate->next = ptr;
-    free(ptr); 
+    //free(ptr); 
 }
 
 //removes the symbolEntry node with the name symbolName
 void SymbolList::removeSymbol(std::string symbolName) {
-    SymbolList::startIterate();
+    startIterate();
+    //symbolEntry * prev = new symbolEntry();
     symbolEntry * prev = (struct symbolEntry *)malloc(sizeof(symbolEntry));
     prev = NULL;
     /*handles both a list where the first matches and where there is only
@@ -192,8 +209,13 @@ void SymbolList::removeSymbol(std::string symbolName) {
 
 //sets iterate to first
 void SymbolList::startIterate() {
-    std::cout << first->name << first->type << first->next;
-    iterate = first;
+
+    //iterate = (struct symbolEntry *)malloc(sizeof(symbolEntry));
+    if (first != NULL) iterate = first;
+    else {
+        std::cout << "error\n"; 
+        exit(1);
+    }
 }
 
 //return NULL if iterate is NULL
@@ -214,5 +236,8 @@ std::string SymbolList::getNext(char * type) {
 
 //Constructor: sets first to NULL
 SymbolList::SymbolList(){
-       first = NULL; 
+       //first = (struct symbolEntry *)malloc(sizeof(symbolEntry));
+       first = new symbolEntry();
+       //first = NULL; 
+       //count = 0;
 }

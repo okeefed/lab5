@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -g -c -Wall -std=c++0x 
-OBJS = main.o Resolve.o SymbolList.o FileHandler.o
+OBJS = main.o Tester.o Resolve.o SymbolList.o FileHandler.o
 
 .C.o:
 	$(CC) $(CFLAGS) $< -o $@
@@ -8,7 +8,12 @@ OBJS = main.o Resolve.o SymbolList.o FileHandler.o
 resolve: $(OBJS)
 	$(CC) $(OBJS) -o resolve
 
+tester: $(OBJS)
+	$(CC) $(OBJS) -o tester
+
 Resolve.o: SymbolList.h FileHandler.h Resolve.h
+
+Tester.o: SymbolList.h FileHandler.h Tester.h
 
 FileHandler.o: SymbolList.h FileHandler.h
 

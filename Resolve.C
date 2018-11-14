@@ -4,9 +4,18 @@
 #include <sys/stat.h>
 #include <cstdlib>
 #include <stdio.h>
+
+#ifndef SYMBOLLIST_H
 #include "SymbolList.h"
+#endif
+
+#ifndef FILEHANDLER_H
 #include "FileHandler.h"
+#endif
+
+#ifndef RESOLVE_H
 #include "Resolve.h"
+#endif
 
 //you need to implement printSymbolsAtEnd and fileExists.
 //The stubs for these are below.
@@ -30,6 +39,8 @@ Resolve::Resolve(int argc, char * argv[])
           std::cout << "invalid file: "<< argv[i] << std::endl;
           exit(1);
        }
+       //handler->insertTest("Hello", 'T');
+       //defined->insertSymbol("Hello", 'T');
        if (handler->isArchive(argv[i])) handler->handleArchive(argv[i]);
        if (handler->isObjectFile(argv[i])) handler->handleObjectFile(argv[i]);
    }

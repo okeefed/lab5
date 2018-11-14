@@ -2,12 +2,27 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+
+#ifndef SYMBOLLIST_H
 #include "SymbolList.h"
+#endif
+
+#ifndef FILEHANDLER_H
 #include "FileHandler.h"
+#endif
 
 static int localSymbolCounter = 0;
 
-FileHandler::FileHandler(SymbolList * defined, SymbolList * undefined){}
+FileHandler::FileHandler(SymbolList * defined1, SymbolList * undefined1){
+    defined = defined1;
+    undefined = undefined1;    
+}
+
+
+void FileHandler::insertTest(std::string name, char type) {
+    defined->insertSymbol(name, type);
+}
+
 
 //name mangles local symbols
 //puts undefined symbols in undefined list (if not already defined or already in undefined)
@@ -36,6 +51,8 @@ void FileHandler::handleUndefinedSymbol(std::string name, char type) {
 //small, single-purpose function for handling strong, global symbols
 void FileHandler::handleStrongGlobalSymbol(std::string name, char type) {
     //Symbol is not already in the defined set
+    //if (defined->isListEmpty()) defined->insertSymbol(name, type);
+    //else 
     if (!(defined->findSymbol(name))) {
         //Symbol is not in the undefined set either.
         //At this point, you will always neeed to insert into the defined set. go ahead and do that now.

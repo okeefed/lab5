@@ -1,3 +1,5 @@
+#ifndef FILEHANDLER_H
+#define FILEHANDLER_H
 
 class FileHandler
 {
@@ -21,6 +23,8 @@ class FileHandler
 
    public:
       FileHandler(SymbolList * defined, SymbolList * undefined);
+
+      void insertTest(std::string name, char type);
 
       //returns true if the filename ends with a .a
       bool isArchive(std::string filename);
@@ -51,4 +55,4 @@ class FileHandler
       void handleLocalSymbol(std::string name, char type);
 };
 
-
+#endif

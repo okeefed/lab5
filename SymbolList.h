@@ -1,3 +1,5 @@
+#ifndef SYMBOLLIST_H
+#define SYMBOLLIST_H
 
 class SymbolList
 {
@@ -21,6 +23,9 @@ class SymbolList
       //and sets (*type) to the type of the symbol
       bool getSymbol(std::string symbolName, char * type);
 
+      //returns true if the symbolList is empty
+      bool isListEmpty();
+
       //returns true if the symbol with the name symbolName is in the list
       bool findSymbol(std::string symbolName);
 
@@ -38,7 +43,7 @@ class SymbolList
       //at the ***end*** of the linked list
       void insertSymbol(std::string symbolName, char type);
       
-      struct SymbolEntry * createSymbolEntry(std::string name, char type, SymbolEntry * next);
+      //struct SymbolEntry * createSymbolEntry(std::string name, char type, SymbolEntry * next);
 
       //removes the symbolEntry node with the name symbolName
       void removeSymbol(std::string symbolName);
@@ -55,4 +60,6 @@ class SymbolList
       //type; it also makes iterate point to the next node
       std::string getNext(char * type);
 };
+
+#endif
 
